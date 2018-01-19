@@ -8,6 +8,9 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 
+from arrival_rate import *
+from reward import *
+
 class MyClient:
 
     total_budget = 500
@@ -50,7 +53,7 @@ class MyClient:
                            np.divide( np.array(d), np.array(x) ) )
         return reward
 
-class DarkForstEnv(gym.Env):
+class DarkForestEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     max_step = 10
 
