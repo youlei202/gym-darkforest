@@ -49,21 +49,38 @@ class MyClient:
 
         reward = result[0]
         x = result[1]
+        
         self.latency = map(lambda x: sum(x)/ArrivalController.slot_num,
-                           np.divide( np.array(d), np.array(x) ) )
+                           np.divide( np.array(d), np.array(x) + 1e-6 ) )
         return reward
 
 class DarkForestEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    max_step = 10
+    max_step = 100
 
     def __init__(self):
         self.client = MyClient()
+
+        self.observation_space = spaces.Box(low=0, high=100000, shape=(3))
+        self.action_space = spaces.Box(low=0, high=10, shape=(1 + ArrivalController.slot_num,)) # Set with 8 elements {0, 1, 2, ..., 7}
         self.step_index = 0
 
     def _step(self, action):
-        
-        reward = self.client.execute(action)
+
+
+        action[0] = 150
+        if sum(action) > MyClient.total_budget:
+            reward = -1
+        else:
+            reward = self.client.execute(action)
+
+
+        if reward >= 250000:
+
+            print action
+            print reward
+            raw_input()
+            
         ob = self.client.get_state()
         
         self.step_index += 1

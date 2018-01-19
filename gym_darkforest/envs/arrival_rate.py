@@ -77,7 +77,7 @@ class ArrivalController:
         self.latency_list = latency_list
     
     def avg_rate(self):
-        return [30/(1.0*x) for x in self.latency_list]
+        return [min(30/(1.0*x),1000) for x in self.latency_list]
     
     def get_lambda(self):
         lam = []
